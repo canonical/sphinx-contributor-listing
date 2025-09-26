@@ -27,5 +27,10 @@ html_title = project
 html_theme = "furo"
 
 extensions = [
-    "hello_ext",
+    "sphinx_contributor_listing",
 ]
+
+# Configuration for contributor listing
+display_contributors = False  # Disable for tests since we may not have git history
+github_folder = "/docs/"
+github_url = "https://github.com/example/repo"
