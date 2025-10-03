@@ -18,6 +18,7 @@
 
 # Ignore import organization warnings
 # ruff: noqa: E402
+# ruff: noqa: PLC0415
 
 from unittest.mock import MagicMock, Mock, patch
 
@@ -33,10 +34,12 @@ class TestContributorListingSetup:
         app_mock = Mock(spec=Sphinx)
         app_mock.connect = Mock()
 
-        with patch("sphinx_contributor_listing.common.add_css") as mock_add_css, \
-             patch("sphinx_contributor_listing.common.add_js") as mock_add_js:
-
+        with (
+            patch("sphinx_contributor_listing.common.add_css") as mock_add_css,
+            patch("sphinx_contributor_listing.common.add_js") as mock_add_js,
+        ):
             from sphinx_contributor_listing import setup
+
             result = setup(app_mock)
 
         assert result.get("parallel_read_safe", "") is True
@@ -108,7 +111,11 @@ class TestContributorContextFunctions:
             mock_getcwd.return_value = "/some/path/not/ending/with/docs"
 
             add_contributor_context(
-                self.app_mock, self.pagename, self.templatename, self.context, self.doctree
+                self.app_mock,
+                self.pagename,
+                self.templatename,
+                self.context,
+                self.doctree,
             )
 
             result = self.context["get_contributors_for_file"]("test", ".md")
@@ -149,8 +156,14 @@ class TestContributorContextFunctions:
 
         # Should return sorted list of contributors with links to their commits
         assert len(result) == 2
-        assert ("Alice Developer", "https://github.com/example/repo/commit/abc123") in result
-        assert ("Bob Developer", "https://github.com/example/repo/commit/def456") in result
+        assert (
+            "Alice Developer",
+            "https://github.com/example/repo/commit/abc123",
+        ) in result
+        assert (
+            "Bob Developer",
+            "https://github.com/example/repo/commit/def456",
+        ) in result
 
     @patch("sphinx_contributor_listing.callback.Repo")
     def test_get_contributors_with_since_filter(self, mock_repo_class):
@@ -174,8 +187,7 @@ class TestContributorContextFunctions:
 
         # Should pass the since parameter to iter_commits
         mock_repo.iter_commits.assert_called_once_with(
-            paths="docs/test.md",
-            since="2024-01-01"
+            paths="docs/test.md", since="2024-01-01"
         )
 
     @patch("sphinx_contributor_listing.callback.Repo")

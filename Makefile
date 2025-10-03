@@ -1,4 +1,4 @@
-PROJECT=sphinx-contributor-listing
+PROJECT=sphinx_contributor_listing
 UV_TEST_GROUPS := "--group=dev"
 UV_LINT_GROUPS := "--group=lint" "--group=types"
 

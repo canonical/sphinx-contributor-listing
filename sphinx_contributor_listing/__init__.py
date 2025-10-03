@@ -36,7 +36,7 @@ except ImportError:  # pragma: no cover
 
 def setup(app: Sphinx) -> ExtensionMetadata:
     """Connect the callback function and add custom CSS and JS."""
-    app.connect("html-page-context", add_contributor_context)
+    app.connect("html-page-context", add_contributor_context)  # type: ignore[reportUnknownMemberType]
     common.add_css(app, "contributors.css")
     common.add_js(app, "contributors.js")
 
