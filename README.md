@@ -27,7 +27,7 @@ pip install sphinx-contributor-listing
 ```
 
 After adding sphinx-contributor-listing to your Python project, update your Sphinx's
-conf.py file to include sphinx-contributor-listing as one of its extensions:
+`conf.py` file to include sphinx-contributor-listing as one of its extensions:
 
 ```python
 extensions = [
