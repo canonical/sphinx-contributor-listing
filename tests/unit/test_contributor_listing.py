@@ -22,7 +22,10 @@
 from unittest.mock import MagicMock, Mock, patch
 
 import pytest
+from git import InvalidGitRepositoryError
 from sphinx.application import Sphinx
+from sphinx_contributor_listing import setup
+from sphinx_contributor_listing.callback import add_contributor_context
 
 
 class TestContributorListingSetup:
@@ -33,10 +36,10 @@ class TestContributorListingSetup:
         app_mock = Mock(spec=Sphinx)
         app_mock.connect = Mock()
 
-        with patch("sphinx_contributor_listing.common.add_css") as mock_add_css, \
-             patch("sphinx_contributor_listing.common.add_js") as mock_add_js:
-
-            from sphinx_contributor_listing import setup
+        with (
+            patch("sphinx_contributor_listing.common.add_css") as mock_add_css,
+            patch("sphinx_contributor_listing.common.add_js") as mock_add_js,
+        ):
             result = setup(app_mock)
 
         assert result.get("parallel_read_safe", "") is True
@@ -65,8 +68,6 @@ class TestContributorContextFunctions:
 
     def test_get_contributors_no_config(self):
         """Test get_contributors_for_file when required config is missing."""
-        # Missing display_contributors config
-        from sphinx_contributor_listing.callback import add_contributor_context
 
         add_contributor_context(
             self.app_mock, self.pagename, self.templatename, self.context, self.doctree
@@ -81,8 +82,6 @@ class TestContributorContextFunctions:
         self.context["github_folder"] = "/docs/"
         self.context["github_url"] = "https://github.com/example/repo"
 
-        from sphinx_contributor_listing.callback import add_contributor_context
-
         add_contributor_context(
             self.app_mock, self.pagename, self.templatename, self.context, self.doctree
         )
@@ -93,7 +92,6 @@ class TestContributorContextFunctions:
     @patch("sphinx_contributor_listing.callback.Repo")
     def test_get_contributors_invalid_repo(self, mock_repo_class):
         """Test get_contributors_for_file with invalid git repository."""
-        from git import InvalidGitRepositoryError
 
         self.context["display_contributors"] = True
         self.context["github_folder"] = "/docs/"
@@ -102,13 +100,15 @@ class TestContributorContextFunctions:
         # Mock Repo to always raise InvalidGitRepositoryError for any path
         mock_repo_class.side_effect = InvalidGitRepositoryError
 
-        from sphinx_contributor_listing.callback import add_contributor_context
-
         with patch("os.getcwd") as mock_getcwd:
             mock_getcwd.return_value = "/some/path/not/ending/with/docs"
 
             add_contributor_context(
-                self.app_mock, self.pagename, self.templatename, self.context, self.doctree
+                self.app_mock,
+                self.pagename,
+                self.templatename,
+                self.context,
+                self.doctree,
             )
 
             result = self.context["get_contributors_for_file"]("test", ".md")
@@ -139,8 +139,6 @@ class TestContributorContextFunctions:
         mock_repo.iter_commits.return_value = [mock_commit1, mock_commit2]
         mock_repo_class.return_value = mock_repo
 
-        from sphinx_contributor_listing.callback import add_contributor_context
-
         add_contributor_context(
             self.app_mock, self.pagename, self.templatename, self.context, self.doctree
         )
@@ -149,8 +147,14 @@ class TestContributorContextFunctions:
 
         # Should return sorted list of contributors with links to their commits
         assert len(result) == 2
-        assert ("Alice Developer", "https://github.com/example/repo/commit/abc123") in result
-        assert ("Bob Developer", "https://github.com/example/repo/commit/def456") in result
+        assert (
+            "Alice Developer",
+            "https://github.com/example/repo/commit/abc123",
+        ) in result
+        assert (
+            "Bob Developer",
+            "https://github.com/example/repo/commit/def456",
+        ) in result
 
     @patch("sphinx_contributor_listing.callback.Repo")
     def test_get_contributors_with_since_filter(self, mock_repo_class):
@@ -164,8 +168,6 @@ class TestContributorContextFunctions:
         mock_repo.iter_commits.return_value = []
         mock_repo_class.return_value = mock_repo
 
-        from sphinx_contributor_listing.callback import add_contributor_context
-
         add_contributor_context(
             self.app_mock, self.pagename, self.templatename, self.context, self.doctree
         )
@@ -174,8 +176,7 @@ class TestContributorContextFunctions:
 
         # Should pass the since parameter to iter_commits
         mock_repo.iter_commits.assert_called_once_with(
-            paths="docs/test.md",
-            since="2024-01-01"
+            paths="docs/test.md", since="2024-01-01"
         )
 
     @patch("sphinx_contributor_listing.callback.Repo")
@@ -198,8 +199,6 @@ class TestContributorContextFunctions:
         mock_repo = Mock()
         mock_repo.iter_commits.return_value = [mock_commit]
         mock_repo_class.return_value = mock_repo
-
-        from sphinx_contributor_listing.callback import add_contributor_context
 
         add_contributor_context(
             self.app_mock, self.pagename, self.templatename, self.context, self.doctree
