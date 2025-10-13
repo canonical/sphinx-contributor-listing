@@ -17,8 +17,8 @@
   margin: auto;
   padding: 0;
   background: var(--color-background-primary);
-    scrollbar-color: var(--color-foreground-border) transparent;
-    scrollbar-width: thin;
+  scrollbar-color: var(--color-foreground-border) transparent;
+  scrollbar-width: thin;
 }
 
 .all-contributors li:hover {
@@ -26,7 +26,7 @@
   width: 100%;
 }
 
-.all-contributors li a{
+.all-contributors li a {
   color: var(--color-sidebar-link-text);
   padding: 1rem;
   display: inline-block;
@@ -36,12 +36,12 @@
   position: fixed;
   display: none;
   width: 100%;
-  height: 100%; 
+  height: 100%;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0,0,0,0.5); 
-  z-index: 2; 
-  cursor: pointer; 
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 2;
+  cursor: pointer;
 }

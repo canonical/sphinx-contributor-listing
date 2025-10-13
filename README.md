@@ -16,6 +16,7 @@ Sphinx templates through the `get_contributors_for_file` function. This function
 custom templates to display contributor information for specific pages.
 
 The extension automatically:
+
 - Extracts commit history from the Git repository
 - Identifies all contributors (including co-authors) for each file
 - Provides links to the contributors' latest commits

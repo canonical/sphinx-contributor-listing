@@ -52,8 +52,10 @@ def test_extension_setup_function():
     app_mock = Mock()
     app_mock.connect = Mock()
 
-    with patch("sphinx_contributor_listing.common.add_css") as mock_add_css, \
-         patch("sphinx_contributor_listing.common.add_js") as mock_add_js:
+    with (
+        patch("sphinx_contributor_listing.common.add_css") as mock_add_css,
+        patch("sphinx_contributor_listing.common.add_js") as mock_add_js,
+    ):
         result = sphinx_contributor_listing.setup(app_mock)
 
     assert "version" in result
@@ -72,10 +74,10 @@ def test_context_functions_work():
     app_mock = Mock()
     pagename = "test"
     templatename = "test.html"
-    context: dict[str, str | dict[str, str] | Callable[[str, str], list]] = {
+    context: dict[str, str | bool | dict[str, str] | Callable[[str, str], list]] = {
         "display_contributors": False,
         "github_folder": "/docs/",
-        "github_url": "https://github.com/example/repo"
+        "github_url": "https://github.com/example/repo",
     }
     doctree = Mock()
 
@@ -120,13 +122,16 @@ def test_sphinx_build(example_project):
     # Run sphinx-build, but don't fail if it has warnings since we might not have git history
     result = subprocess.run(
         ["sphinx-build", "-b", "html", example_project, build_dir],
+        check=False,
         capture_output=True,
-        text=True
+        text=True,
     )
 
     # Check if build succeeded (exit code 0) or had warnings (exit code 1)
     if result.returncode not in [0, 1]:
-        pytest.fail(f"Sphinx build failed with exit code {result.returncode}: {result.stderr}")
+        pytest.fail(
+            f"Sphinx build failed with exit code {result.returncode}: {result.stderr}"
+        )
 
     index = build_dir / "index.html"
 

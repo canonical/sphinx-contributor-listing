@@ -16,10 +16,11 @@
 
 """Contains the callback functions for the sphinx-contributor-listing extension."""
 
-import os
-from typing import Any, Dict, List, Tuple, Optional
+from pathlib import Path
+from typing import Any
 
-from git import Repo, InvalidGitRepositoryError
+from docutils import nodes
+from git import InvalidGitRepositoryError, Repo
 from sphinx.application import Sphinx
 from sphinx.util import logging
 
@@ -27,15 +28,17 @@ logger = logging.getLogger(__name__)
 
 
 def add_contributor_context(
-    app: Sphinx,
-    pagename: str,
-    templatename: str,
-    context: Dict[str, Any],
-    doctree: Any,
+    _app: Sphinx,
+    _pagename: str,
+    _templatename: str,
+    context: dict[str, Any],
+    _doctree: nodes.document | None,
 ) -> None:
     """Add contributor information to the page context."""
 
-    def get_contributors_for_file(pagename: str, page_source_suffix: str) -> List[Tuple[str, str]]:
+    def get_contributors_for_file(
+        pagename: str, page_source_suffix: str
+    ) -> list[tuple[str, str]]:
         """Get contributors for a specific file."""
         if (
             "display_contributors" not in context
@@ -51,7 +54,7 @@ def add_contributor_context(
             try:
                 repo = Repo(".")
             except InvalidGitRepositoryError:
-                cwd = os.getcwd()
+                cwd = str(Path.cwd())
                 ghfolder = context["github_folder"][:-1]
                 if ghfolder and cwd.endswith(ghfolder):
                     try:
@@ -63,7 +66,7 @@ def add_contributor_context(
                     logger.warning("The local Git repository could not be found.")
                     return []
 
-            since: Optional[str] = None
+            since: str | None = None
 
             if (
                 "display_contributors_since" in context
@@ -78,15 +81,17 @@ def add_contributor_context(
                 logger.warning("Failed to iterate through the Git commits: %s", str(e))
                 return []
 
-            contributors_dict: Dict[str, Dict[str, Any]] = {}
+            contributors_dict: dict[str, dict[str, Any]] = {}
             for commit in commits:
                 contributors = [commit.author.name]
-                for co_author in commit.co_authors:
-                    contributors.append(co_author.name)
+                contributors.extend(co_author.name for co_author in commit.co_authors)
                 for contributor in contributors:
+                    if contributor is None:
+                        continue
                     if (
                         contributor not in contributors_dict
-                        or commit.committed_date > contributors_dict[contributor]["date"]
+                        or commit.committed_date
+                        > contributors_dict[contributor]["date"]
                     ):
                         contributors_dict[contributor] = {
                             "date": commit.committed_date,
@@ -100,7 +105,6 @@ def add_contributor_context(
 
             return sorted(contributors_list)
 
-        else:
-            return []
+        return []
 
     context["get_contributors_for_file"] = get_contributors_for_file
