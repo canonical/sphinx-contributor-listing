@@ -33,15 +33,51 @@ conf.py file to include sphinx-contributor-listing as one of its extensions:
 extensions = [
     "sphinx_contributor_listing"
 ]
-
-# Configuration options
-display_contributors = True  # Enable contributor display
-github_folder = "/docs/"     # Path to documentation folder in repository
-github_url = "https://github.com/your-org/your-repo"  # Base URL for commit links
-
-# Optional: Filter commits by date
-display_contributors_since = "2024-01-01"  # Only show contributors since this date
 ```
+
+Then, in your conf.py file, update `html_context` to include the following values:
+
+```python
+html_context = {
+    # Required
+    display_contributors = True  # Enable contributor display
+    github_url = "https://github.com/your-org/your-repo"  # Base URL for commit links
+    github_folder = "/docs/"     # Path to documentation folder in repository
+
+    # Optional: Filter commits by date
+    display_contributors_since = "2024-01-01"  # Only show contributors since this date
+}
+```
+
+To list the contributors on each page, update your project's template to include the
+`get_contributors_for_file` function. To display contributors in the page footer, you'd
+update the `footer.html` file to include something akin to:
+
+```html
+  <div>
+    {% if display_contributors and pagename and page_source_suffix %}
+        {% set contributors = get_contributors_for_file(pagename, page_source_suffix) %}
+        {% if contributors %}
+          {% if contributors | length > 1 %}
+              <a class="display-contributors">Thanks to the {{ contributors | length }} contributors!</a>
+          {% else %}
+              <a class="display-contributors">Thanks to our contributor!</a>
+          {% endif %}
+          <div id="overlay"></div>
+          <ul class="all-contributors">
+              {% for name, github_url in contributors %}
+                  <li>
+                      <a href="{{ github_url }}" class="contributor">{{ name }}</a>
+                  </li>
+              {% endfor %}
+          </ul>
+       {% endif %}
+   {% endif %}
+  </div>
+```
+
+For more information on templating in Sphinx, refer to
+[Templating](https://www.sphinx-doc.org/en/master/development/html_themes/templating.html).
 
 ## Community and support
 
