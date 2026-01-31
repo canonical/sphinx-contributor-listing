@@ -1,12 +1,12 @@
 $(document).ready(function() {
     $(document).on("click", function () {
         $(".all-contributors").hide();
-        $("#overlay").hide();
+        $("#all-contributors-overlay").hide();
     });
 
     $('.display-contributors').click(function(event) {
         $('.all-contributors').toggle();
-        $("#overlay").toggle();
+        $("#all-contributors-overlay").toggle();
         event.stopPropagation();
     });
 })
