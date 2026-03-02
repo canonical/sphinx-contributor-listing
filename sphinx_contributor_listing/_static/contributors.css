@@ -32,7 +32,7 @@
   display: inline-block;
 }
 
-#overlay {
+#all-contributors-overlay {
   position: fixed;
   display: none;
   width: 100%;
