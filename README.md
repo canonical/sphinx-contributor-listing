@@ -53,7 +53,7 @@ To list the contributors on each page, update your project's template to include
 `get_contributors_for_file` function. To display contributors in the page footer, you'd
 update the `footer.html` file to include something akin to:
 
-```html
+```
   <div>
     {% if display_contributors and pagename and page_source_suffix %}
         {% set contributors = get_contributors_for_file(pagename, page_source_suffix) %}
