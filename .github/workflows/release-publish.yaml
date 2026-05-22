@@ -59,11 +59,8 @@ jobs:
         with:
           name: pypi-packages
       - name: Release
-        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2.6.2
-        with:
-          # Generate release notes on the new GH release
-          generate_release_notes: true
-          # Add wheel and source tarball
-          files: |
-            *.whl
-            *.tar.gz
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          gh release create "${REF_NAME}" --generate-notes *.whl *.tar.gz
