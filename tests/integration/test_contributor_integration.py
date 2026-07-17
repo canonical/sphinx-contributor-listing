@@ -76,7 +76,7 @@ def test_context_functions_work():
     templatename = "test.html"
     context: dict[str, str | bool | dict[str, str] | Callable[[str, str], list]] = {
         "display_contributors": False,
-        "github_folder": "/docs/",
+        "repo_folder": "/docs/",
         "github_url": "https://github.com/example/repo",
     }
     doctree = Mock()

@@ -32,5 +32,5 @@ extensions = [
 
 # Configuration for contributor listing
 display_contributors = False  # Disable for tests since we may not have git history
-github_folder = "/docs/"
+repo_folder = "/docs/"
 github_url = "https://github.com/example/repo"
