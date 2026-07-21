@@ -51,6 +51,7 @@ def test_extension_setup_function():
 
     app_mock = Mock()
     app_mock.connect = Mock()
+    app_mock.config.html_context = {}
 
     with (
         patch("sphinx_contributor_listing.common.add_css") as mock_add_css,

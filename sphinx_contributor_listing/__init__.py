@@ -47,8 +47,7 @@ def setup(app: Sphinx) -> ExtensionMetadata:
             "Using 'repo_folder' instead.",
             color="yellow",
         )
-        if not html_context.get("repo_folder"):
-            html_context["repo_folder"] = html_context["github_folder"]
+        html_context.setdefault("repo_folder", html_context["github_folder"])
 
     app.connect("html-page-context", add_contributor_context)  # type: ignore[reportUnknownMemberType]
     common.add_css(app, "contributors.css")
