@@ -43,8 +43,8 @@ def setup(app: Sphinx) -> ExtensionMetadata:
     html_context = app.config.html_context
     if html_context.get("github_folder"):
         logger.info(
-            "%s: conf.py: 'github_folder' is deprecated. Using 'repo_folder' instead.",
-            __name__,
+            f"{__name__}: conf.py: 'github_folder' is deprecated. "
+            "Using 'repo_folder' instead.",
             color="yellow",
         )
         if not html_context.get("repo_folder"):
