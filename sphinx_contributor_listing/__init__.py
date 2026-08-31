@@ -21,6 +21,7 @@ from sphinx.util.typing import ExtensionMetadata
 
 from sphinx_contributor_listing import common
 from sphinx_contributor_listing.callback import add_contributor_context
+from sphinx.util import logging
 
 
 try:
@@ -36,6 +37,18 @@ except ImportError:  # pragma: no cover
 
 def setup(app: Sphinx) -> ExtensionMetadata:
     """Connect the callback function and add custom CSS and JS."""
+    logger = logging.getLogger(__name__)
+
+    # Backward-compatible context vars
+    html_context = app.config.html_context
+    if html_context.get("github_folder"):
+        logger.info(
+            f"{__name__}: conf.py: 'github_folder' is deprecated. "
+            "Using 'repo_folder' instead.",
+            color="yellow",
+        )
+        html_context.setdefault("repo_folder", html_context["github_folder"])
+
     app.connect("html-page-context", add_contributor_context)  # type: ignore[reportUnknownMemberType]
     common.add_css(app, "contributors.css")
     common.add_js(app, "contributors.js")

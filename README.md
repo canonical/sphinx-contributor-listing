@@ -42,7 +42,7 @@ html_context = {
     # Required
     display_contributors = True  # Enable contributor display
     github_url = "https://github.com/your-org/your-repo"  # Base URL for commit links
-    github_folder = "/docs/"     # Path to documentation folder in repository
+    repo_folder = "/docs/"     # Path to documentation folder in repository
 
     # Optional: Filter commits by date
     display_contributors_since = "2024-01-01"  # Only show contributors since this date

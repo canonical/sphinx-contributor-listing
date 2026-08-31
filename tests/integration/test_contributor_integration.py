@@ -51,6 +51,7 @@ def test_extension_setup_function():
 
     app_mock = Mock()
     app_mock.connect = Mock()
+    app_mock.config.html_context = {}
 
     with (
         patch("sphinx_contributor_listing.common.add_css") as mock_add_css,
@@ -76,7 +77,7 @@ def test_context_functions_work():
     templatename = "test.html"
     context: dict[str, str | bool | dict[str, str] | Callable[[str, str], list]] = {
         "display_contributors": False,
-        "github_folder": "/docs/",
+        "repo_folder": "/docs/",
         "github_url": "https://github.com/example/repo",
     }
     doctree = Mock()
