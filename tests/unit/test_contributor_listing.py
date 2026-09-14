@@ -35,6 +35,8 @@ class TestContributorListingSetup:
         """Test that setup returns proper extension metadata."""
         app_mock = Mock(spec=Sphinx)
         app_mock.connect = Mock()
+        app_mock.config = Mock()
+        app_mock.config.html_context = {}
 
         with (
             patch("sphinx_contributor_listing.common.add_css") as mock_add_css,
@@ -53,6 +55,20 @@ class TestContributorListingSetup:
         # Verify CSS and JS are added
         mock_add_css.assert_called_once_with(app_mock, "contributors.css")
         mock_add_js.assert_called_once_with(app_mock, "contributors.js")
+
+    def test_setup_config_vars_legacy(self):
+        """Test legacy config values with fallbacks."""
+        app_mock = Mock(spec=Sphinx)
+        app_mock.connect = Mock()
+        app_mock.config = Mock()
+
+        # Set legacy config values
+        app_mock.config.html_context = {"github_folder": "/docs/"}
+
+        setup(app_mock)
+
+        # Verify that the fallback values are set
+        assert app_mock.config.html_context["repo_folder"] == "/docs/"
 
 
 class TestContributorContextFunctions:
@@ -79,7 +95,7 @@ class TestContributorContextFunctions:
     def test_get_contributors_disabled(self):
         """Test get_contributors_for_file when contributors display is disabled."""
         self.context["display_contributors"] = False
-        self.context["github_folder"] = "/docs/"
+        self.context["repo_folder"] = "/docs/"
         self.context["github_url"] = "https://github.com/example/repo"
 
         add_contributor_context(
@@ -94,7 +110,7 @@ class TestContributorContextFunctions:
         """Test get_contributors_for_file with invalid git repository."""
 
         self.context["display_contributors"] = True
-        self.context["github_folder"] = "/docs/"
+        self.context["repo_folder"] = "/docs/"
         self.context["github_url"] = "https://github.com/example/repo"
 
         # Mock Repo to always raise InvalidGitRepositoryError for any path
@@ -119,7 +135,7 @@ class TestContributorContextFunctions:
     def test_get_contributors_with_commits(self, mock_repo_class):
         """Test get_contributors_for_file with valid commits."""
         self.context["display_contributors"] = True
-        self.context["github_folder"] = "/docs/"
+        self.context["repo_folder"] = "/docs/"
         self.context["github_url"] = "https://github.com/example/repo"
 
         # Mock repository and commits
@@ -160,7 +176,7 @@ class TestContributorContextFunctions:
     def test_get_contributors_with_since_filter(self, mock_repo_class):
         """Test get_contributors_for_file with since filter."""
         self.context["display_contributors"] = True
-        self.context["github_folder"] = "/docs/"
+        self.context["repo_folder"] = "/docs/"
         self.context["github_url"] = "https://github.com/example/repo"
         self.context["display_contributors_since"] = "2024-01-01"
 
@@ -183,7 +199,7 @@ class TestContributorContextFunctions:
     def test_get_contributors_with_co_authors(self, mock_repo_class):
         """Test get_contributors_for_file with co-authors."""
         self.context["display_contributors"] = True
-        self.context["github_folder"] = "/docs/"
+        self.context["repo_folder"] = "/docs/"
         self.context["github_url"] = "https://github.com/example/repo"
 
         # Mock commit with co-authors
