@@ -5,7 +5,7 @@ and practices for participating in the project.
 
 ## Review the project expectations
 
-Before you start working on the project, there are three documents for you to digest.
+Before you start working on the project, there are four documents for you to digest.
 
 ### Ubuntu Code of Conduct
 
