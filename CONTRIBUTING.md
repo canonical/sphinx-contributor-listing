@@ -24,6 +24,10 @@ incorporated into the repository.
 
 This project is licensed under [GPL-3.0](LICENSE).
 
+### Versioning policy
+
+This project is versioned according to [Semantic Versioning 2.0](https://semver.org).
+
 ## Report an issue or open a request
 
 If you find a bug or feature gap in the project, look for it in the [project's GitHub
@@ -88,6 +92,10 @@ others have reported it. If they have, look into the current status of the topic
 one else is working on it, add a comment stating that you'd like to take it on, and a
 maintainer will assign it to you.
 
+If you'd like to implement a change that will break compatibility with existing Sphinx
+projects, be sure to mention this in the issue description. Breaking changes must be
+cleared with a maintainer and may not fit into a release for several months.
+
 If you're ever in doubt about developments in the project, ask!
 
 ### Create a development branch
@@ -109,8 +117,6 @@ name as `<ticket-id>-<description>`. For example, if you're working on GitHub is
 \#235, and it's about adding a string sanitizer, you'd name your branch
 `issue-235-add-string-sanitizer-method`.
 
-````
-
 ### Commit a change
 
 Once you've made the changes to the code and you're ready to test it, start by
@@ -119,7 +125,7 @@ committing:
 ```bash
 git add -A
 git commit
-````
+```
 
 Format the commit message according to the [Conventional
 Commits](https://www.conventionalcommits.org/en/v1.0.0/) style. For the sanitizer
@@ -218,3 +224,8 @@ interface, as it leads to fewer potential conflicts with syncs.
 
 Don't force-push changes to the branch. It destroys the history of the review and makes
 it harder for maintainers to see code changes.
+
+Once approved, the maintainer will fit your changes into an upcoming release. Patch
+versions and minor versions are usually released at a regular cadence, but major
+versions aren't tagged as frequently. If your change is breaking, it may be some time
+before it's fit into a release.
