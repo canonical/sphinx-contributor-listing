@@ -42,20 +42,20 @@ def add_contributor_context(
         """Get contributors for a specific file."""
         if (
             "display_contributors" not in context
-            or "github_folder" not in context
+            or "repo_folder" not in context
             or "github_url" not in context
         ):
             return []
 
         if context["display_contributors"]:
             filename = f"{pagename}{page_source_suffix}"
-            paths = context["github_folder"][1:] + filename
+            paths = context["repo_folder"][1:] + filename
 
             try:
                 repo = Repo(".")
             except InvalidGitRepositoryError:
                 cwd = str(Path.cwd())
-                ghfolder = context["github_folder"][:-1]
+                ghfolder = context["repo_folder"][:-1]
                 if ghfolder and cwd.endswith(ghfolder):
                     try:
                         repo = Repo(cwd.rpartition(ghfolder)[0])
